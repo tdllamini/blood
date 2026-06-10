@@ -1,4 +1,30 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Build output
 bin/
 target/
 *.class
 *.jar
+*.war
+
+# Maven wrapper (if ever added locally)
+mvnw*
+/.mvn/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+*~
+
+# Local config / secrets
+*.env
+*.env.local
+*.properties.local
+application-local.*
+config/local*
