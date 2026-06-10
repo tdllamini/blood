@@ -7,7 +7,7 @@
 This document specifies the requirements for the Blood Bank Management System (BBMS). It defines the functional and non-functional requirements for a software application designed to manage blood donations, inventory, appointments, and requests for blood bank operations.
 
 ### 1.2 Scope
-The Blood Bank Management System shall provide a comprehensive solution for managing donor registrations, appointment scheduling, blood inventory tracking, laboratory testing, blood requests from hospitals, and reporting. The system supports multiple user roles (ADMIN, STAFF, DONOR) with role-based access control.
+The Blood Bank Management System shall provide a comprehensive solution for managing donor registrations, appointment scheduling, blood inventory tracking, laboratory testing, blood requests from hospitals, reporting and more. The system supports multiple user roles (ADMIN, STAFF, DONOR) with role-based access control.
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 | Term | Definition |
@@ -86,13 +86,14 @@ All data transmission shall use TLS encryption. API endpoints shall use JSON for
 | FR-1.2 | The system shall support three user roles: ADMIN, STAFF, DONOR |
 | FR-1.3 | The system shall enforce role-based access control for all system features |
 | FR-1.4 | The system shall provide password hashing for stored credentials using bcrypt or equivalent |
-| FR-1.5 | The system shall implement session timeout after 30 minutes of inactivity |
+| FR-1.5 | The system shall implement session timeout after 10 minutes of inactivity |
 
 #### 3.2.2 Donor Management (FR-2)
 | ID | Requirement |
 |----|-------------|
-| FR-2.1 | The system shall allow donors to register with personal details (name, contact, DOB, blood type) |
-| FR-2.2 | The system shall allow donors to view and edit their profile |
+| FR-2.1 | The system shall allow donors to register with personal details (name, contact, DOB [convert to years to screen eligability], blood type), If blood type not known an option to bleed and test is provided ?? |
+  FR-2.1.1 The system shall allow the ADMIN to register staff, and Staff to set their Passwords with Onetime pin after getting an authorization message. ***(How does the system send encrypted message to user after being registered.)
+| FR-2.2 | The system shall allow donors to view and update their profile |
 | FR-2.3 | The system shall allow staff to search donors by blood type, name, or contact |
 | FR-2.4 | The system shall track donor eligibility based on screening results |
 | FR-2.5 | The system shall record total donation count per donor |
@@ -108,12 +109,13 @@ All data transmission shall use TLS encryption. API endpoints shall use JSON for
 
 #### 3.2.4 Blood Inventory Management (FR-4)
 | ID | Requirement |
-|----|-------------|
+|----|-------------|'
 | FR-4.1 | The system shall track blood units by type (A+, A-, B+, B-, AB+, AB-, O+, O-) |
 | FR-4.2 | The system shall record expiry dates for each blood unit |
 | FR-4.3 | The system shall mark units as usable/unusable based on test results |
 | FR-4.4 | The system shall alert when inventory falls below threshold |
 | FR-4.5 | The system shall track inventory across multiple locations |
+
 
 #### 3.2.5 Blood Processing (FR-5)
 | ID | Requirement |
@@ -153,6 +155,13 @@ All data transmission shall use TLS encryption. API endpoints shall use JSON for
 | ID | Requirement |
 |----|-------------|
 | FR-9.1 | The system shall log equipment temperature checks |
+| FR-9.2 | The system shall record training completion for staff |
+| FR-9.3 | The system shall track certification expiry dates |
+
+#### 3.2.9 Quality Control (FR-10)
+| ID | Requirement |
+|----|-------------|
+| FR-10.1 | The system shall calculate the demand focust, inventory optimisation, Queue Management, Slot Optimisation, Eligibility Scoring |
 | FR-9.2 | The system shall record training completion for staff |
 | FR-9.3 | The system shall track certification expiry dates |
 

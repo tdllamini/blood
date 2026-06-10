@@ -1,4 +1,4 @@
-package com.solomon.blood;
+package frontend;
 
 public class Blood {
 
