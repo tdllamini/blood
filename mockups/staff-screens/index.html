@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank System - Staff Screens</title>
+    <style>
+        :root {
+            --primary: #2E86AB;
+            --secondary: #A8DADC;
+            --accent: #E63946;
+            --background: #F1FAEE;
+            --text: #1D3557;
+            --success: #2A9D8F;
+            --warning: #F4A261;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+        .nav {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav h1 { font-size: 1.25rem; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .screen {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .screen h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.25rem;
+        }
+        .btn-accent { background: var(--accent); }
+        .btn-success { background: var(--success); }
+        .btn-warning { background: var(--warning); }
+        .btn:hover { opacity: 0.9; }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .grid { display: grid; gap: 1rem; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .card {
+            background: var(--secondary);
+            padding: 1rem;
+            border-radius: 6px;
+        }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .badge-eligible { background: var(--success); color: white; }
+        .badge-ineligible { background: var(--accent); color: white; }
+        .badge-pending { background: var(--warning); color: white; }
+        .badge-available { background: var(--success); color: white; }
+        .badge-low { background: var(--accent); color: white; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        .screen-nav {
+            margin-bottom: 1rem;
+        }
+        .screen-nav a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            margin-right: 0.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .screen-nav a.active { background: var(--primary); color: white; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <h1>Blood Bank System - Staff Portal</h1>
+        <div class="nav-links">
+            <a href="#" onclick="showScreen('dashboard')">Dashboard</a>
+            <a href="#" onclick="showScreen('appointments')">Appointments</a>
+            <a href="#" onclick="showScreen('inventory')">Inventory</a>
+            <a href="#" onclick="showScreen('donors')">Donors</a>
+            <a href="#" onclick="showScreen('requests')">Requests</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="login" class="screen">
+            <h2>Staff Login</h2>
+            <div class="grid" style="max-width: 400px;">
+                <div class="form-group">
+                    <label>Staff ID</label>
+                    <input type="text" placeholder="Enter Staff ID">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter password">
+                </div>
+                <button class="btn btn-success" onclick="showScreen('dashboard')">Login</button>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="screen" style="display: none;">
+            <h2>Staff Dashboard</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('dashboard')">Dashboard</a>
+                <a href="#" onclick="showScreen('appointments')">Appointments</a>
+                <a href="#" onclick="showScreen('inventory')">Inventory</a>
+            </div>
+            <div class="grid grid-3" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <h3>Today's Donations</h3>
+                    <div class="value">8</div>
+                </div>
+                <div class="card">
+                    <h3>Pending Appointments</h3>
+                    <div class="value">12</div>
+                </div>
+                <div class="card">
+                    <h3>Blood Units Available</h3>
+                    <div class="value">245</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Current Task Queue</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Donor</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>09:00</td>
+                            <td>Donation</td>
+                            <td>John Smith</td>
+                            <td class="status-pending">Pending</td>
+                            <td><button class="btn">Start</button></td>
+                        </tr>
+                        <tr>
+                            <td>10:30</td>
+                            <td>Collection</td>
+                            <td>City Hospital</td>
+                            <td class="status-scheduled">Scheduled</td>
+                            <td><button class="btn">Prepare</button></td>
+                        </tr>
+                        <tr>
+                            <td>14:00</td>
+                            <td>Testing</td>
+                            <td>Batch #1234</td>
+                            <td class="status-pending">Pending</td>
+                            <td><button class="btn">Process</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Appointments -->
+        <div id="appointments" class="screen" style="display: none;">
+            <h2>Appointment Management</h2>
+            <div class="screen-nav">
+                <a href="#" onclick="showScreen('appointments')">Today</a>
+                <a href="#" class="active" onclick="showScreen('appointments-week')">This Week</a>
+                <a href="#" onclick="showScreen('appointments-all')">All</a>
+            </div>
+            <div style="margin: 1rem 0;">
+                <button class="btn btn-success">+ New Appointment</button>
+                <input type="text" placeholder="Search by donor name or ID..." style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; margin-left: 1rem;">
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date/Time</th>
+                        <th>Donor</th>
+                        <th>Blood Type</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>APT-001</td>
+                        <td>2026-06-10 09:00</td>
+                        <td>Jane Doe</td>
+                        <td>A+</td>
+                        <td>Main Center</td>
+                        <td><span class="badge badge-pending">Pending</span></td>
+                        <td>
+                            <button class="btn btn-success">Confirm</button>
+                            <button class="btn btn-accent">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>APT-002</td>
+                        <td>2026-06-10 10:30</td>
+                        <td>Bob Wilson</td>
+                        <td>O-</td>
+                        <td>North Branch</td>
+                        <td><span class="badge badge-eligible">Confirmed</span></td>
+                        <td>
+                            <button class="btn btn-warning">Reschedule</button>
+                            <button class="btn">Complete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>APT-003</td>
+                        <td>2026-06-10 14:00</td>
+                        <td>Alice Brown</td>
+                        <td>B+</td>
+                        <td>Mobile Unit</td>
+                        <td><span class="badge badge-ineligible">Cancelled</span></td>
+                        <td>
+                            <button class="btn">Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Inventory -->
+        <div id="inventory" class="screen" style="display: none;">
+            <h2>Blood Inventory Management</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('inventory')">All Units</a>
+                <a href="#" onclick="showScreen('inventory-add')">Add Units</a>
+                <a href="#" onclick="showScreen('inventory-expiry')">Expiry Alerts</a>
+            </div>
+            <div class="grid grid-2" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <h3>Total Units</h3>
+                    <div class="value">245</div>
+                </div>
+                <div class="card">
+                    <h3>Low Stock Alert</h3>
+                    <div class="value" style="color: var(--accent);">3 Types</div>
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <button class="btn btn-success">+ Add Blood Unit</button>
+                <button class="btn btn-warning">Run Expiry Check</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Unit ID</th>
+                        <th>Blood Type</th>
+                        <th>Donor ID</th>
+                        <th>Collection Date</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BU-001</td>
+                        <td>O+</td>
+                        <td>D-1001</td>
+                        <td>2026-05-20</td>
+                        <td>2026-08-20</td>
+                        <td><span class="badge badge-available">Available</span></td>
+                        <td><button class="btn">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>BU-002</td>
+                        <td>A-</td>
+                        <td>D-1002</td>
+                        <td>2026-05-25</td>
+                        <td>2026-06-25</td>
+                        <td><span class="badge badge-low">Expiring Soon</span></td>
+                        <td>
+                            <button class="btn btn-warning">Release</button>
+                            <button class="btn btn-accent">Discard</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>BU-003</td>
+                        <td>AB+</td>
+                        <td>D-1003</td>
+                        <td>2026-05-15</td>
+                        <td>2026-08-15</td>
+                        <td><span class="badge badge-available">Available</span></td>
+                        <td><button class="btn">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Donors -->
+        <div id="donors" class="screen" style="display: none;">
+            <h2>Donor Management</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('donors')">All Donors</a>
+                <a href="#" onclick="showScreen('donors-register')">Register Donor</a>
+                <a href="#" onclick="showScreen('donors-search')">Search</a>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <input type="text" placeholder="Search by name, blood type, or contact..." style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; width: 300px;">
+                <button class="btn">Search</button>
+                <button class="btn btn-success" style="float: right;">+ Register New Donor</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Blood Type</th>
+                        <th>Contact</th>
+                        <th>Total Donations</th>
+                        <th>Last Donation</th>
+                        <th>Eligibility</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>D-1001</td>
+                        <td>John Smith</td>
+                        <td>O+</td>
+                        <td>555-0100</td>
+                        <td>12</td>
+                        <td>2026-05-20</td>
+                        <td><span class="badge badge-eligible">Eligible</span></td>
+                        <td>
+                            <button class="btn">Profile</button>
+                            <button class="btn btn-success">Schedule</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>D-1002</td>
+                        <td>Jane Doe</td>
+                        <td>A+</td>
+                        <td>555-0101</td>
+                        <td>5</td>
+                        <td>2026-04-15</td>
+                        <td><span class="badge badge-ineligible">Not Eligible</span></td>
+                        <td>
+                            <button class="btn">Profile</button>
+                            <button class="btn">History</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>D-1003</td>
+                        <td>Bob Wilson</td>
+                        <td>O-</td>
+                        <td>555-0102</td>
+                        <td>8</td>
+                        <td>2026-06-01</td>
+                        <td><span class="badge badge-eligible">Eligible</span></td>
+                        <td>
+                            <button class="btn">Profile</button>
+                            <button class="btn btn-success">Schedule</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Blood Requests -->
+        <div id="requests" class="screen" style="display: none;">
+            <h2>Blood Request Processing</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('requests')">All Requests</a>
+                <a href="#" onclick="showScreen('requests-new')">New Request</a>
+                <a href="#" onclick="showScreen('requests-history')">History</a>
+            </div>
+            <div class="grid grid-2" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <h3>Pending Requests</h3>
+                    <div class="value" style="color: var(--warning);">5</div>
+                </div>
+                <div class="card">
+                    <h3>Fulfilled Today</h3>
+                    <div class="value">3</div>
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <button class="btn btn-success">+ New Request</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Hospital</th>
+                        <th>Blood Type</th>
+                        <th>Units</th>
+                        <th>Priority</th>
+                        <th>Requested Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>REQ-001</td>
+                        <td>City General Hospital</td>
+                        <td>O-</td>
+                        <td>5</td>
+                        <td><span class="badge badge-ineligible">Urgent</span></td>
+                        <td>2026-06-10</td>
+                        <td><span class="badge badge-pending">Pending</span></td>
+                        <td>
+                            <button class="btn btn-success">Fulfill</button>
+                            <button class="btn">Details</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>REQ-002</td>
+                        <td>St. Mary's Medical</td>
+                        <td>A+</td>
+                        <td>3</td>
+                        <td>Normal</td>
+                        <td>2026-06-10</td>
+                        <td><span class="badge badge-eligible">Processing</span></td>
+                        <td>
+                            <button class="btn btn-success">Dispatch</button>
+                            <button class="btn">Details</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>REQ-003</td>
+                        <td>Emergency Center</td>
+                        <td>AB+</td>
+                        <td>2</td>
+                        <td><span class="badge badge-ineligible">Critical</span></td>
+                        <td>2026-06-10</td>
+                        <td><span class="badge badge-pending">Pending</span></td>
+                        <td>
+                            <button class="btn btn-success">Fulfill</button>
+                            <button class="btn">Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            const el = document.getElementById(screen);
+            if (el) el.style.display = 'block';
+        }
+        showScreen('login');
+    </script>
+</body>
+</html>

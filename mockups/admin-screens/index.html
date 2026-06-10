@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank System - Admin Screens</title>
+    <style>
+        :root {
+            --primary: #2E86AB;
+            --secondary: #A8DADC;
+            --accent: #E63946;
+            --background: #F1FAEE;
+            --text: #1D3557;
+            --success: #2A9D8F;
+            --warning: #F4A261;
+            --purple: #7209B7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+        .nav {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav h1 { font-size: 1.25rem; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .screen {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .screen h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.25rem;
+        }
+        .btn-accent { background: var(--accent); }
+        .btn-success { background: var(--success); }
+        .btn-warning { background: var(--warning); }
+        .btn-purple { background: var(--purple); }
+        .btn:hover { opacity: 0.9; }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .grid { display: grid; gap: 1rem; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        .card {
+            background: var(--secondary);
+            padding: 1rem;
+            border-radius: 6px;
+        }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .badge-eligible { background: var(--success); color: white; }
+        .badge-ineligible { background: var(--accent); color: white; }
+        .badge-pending { background: var(--warning); color: white; }
+        .badge-available { background: var(--success); color: white; }
+        .badge-low { background: var(--accent); color: white; }
+        .badge-admin { background: var(--purple); color: white; }
+        .badge-staff { background: var(--primary); color: white; }
+        .badge-donor { background: var(--success); color: white; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        .screen-nav {
+            margin-bottom: 1rem;
+        }
+        .screen-nav a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            margin-right: 0.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .screen-nav a.active { background: var(--primary); color: white; }
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+        .alert-warning {
+            background: #FFF3CD;
+            border-color: var(--warning);
+            color: #856404;
+        }
+        .alert-danger {
+            background: #F8D7DA;
+            border-color: var(--accent);
+            color: #721C24;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <h1>Blood Bank System - Admin Portal</h1>
+        <div class="nav-links">
+            <a href="#" onclick="showScreen('dashboard')">Dashboard</a>
+            <a href="#" onclick="showScreen('users')">Users</a>
+            <a href="#" onclick="showScreen('staff')">Staff Mgmt</a>
+            <a href="#" onclick="showScreen('reports')">Reports</a>
+            <a href="#" onclick="showScreen('settings')">Settings</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="login" class="screen">
+            <h2>Admin Login</h2>
+            <div class="grid" style="max-width: 400px;">
+                <div class="form-group">
+                    <label>Admin ID</label>
+                    <input type="text" placeholder="Enter Admin ID">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter password">
+                </div>
+                <button class="btn btn-purple" onclick="showScreen('dashboard')">Login</button>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="dashboard" class="screen" style="display: none;">
+            <h2>Admin Dashboard</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('dashboard')">Dashboard</a>
+                <a href="#" onclick="showScreen('users')">Users</a>
+                <a href="#" onclick="showScreen('reports')">Reports</a>
+            </div>
+            <div class="grid grid-4" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <h3>Total Donors</h3>
+                    <div class="value">1,245</div>
+                </div>
+                <div class="card">
+                    <h3>Total Staff</h3>
+                    <div class="value">48</div>
+                </div>
+                <div class="card">
+                    <h3>Blood Units</h3>
+                    <div class="value">245</div>
+                </div>
+                <div class="card">
+                    <h3>Pending Requests</h3>
+                    <div class="value" style="color: var(--warning);">12</div>
+                </div>
+            </div>
+            <div class="alert alert-warning">
+                <strong>System Alert:</strong> Blood type O- inventory is critically low (2 units remaining). Consider initiating emergency collection drive.
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>Recent System Activity</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:32 AM</td>
+                                <td>Dr. Sarah (Staff)</td>
+                                <td>Blood Collection</td>
+                                <td>Recorded 450ml O+</td>
+                            </tr>
+                            <tr>
+                                <td>10:15 AM</td>
+                                <td>Admin</td>
+                                <td>User Created</td>
+                                <td>New staff: Mike R.</td>
+                            </tr>
+                            <tr>
+                                <td>09:48 AM</td>
+                                <td>Jane Donor</td>
+                                <td>Appointment Booked</td>
+                                <td>Jun 15, 10:00 AM</td>
+                            </tr>
+                            <tr>
+                                <td>09:30 AM</td>
+                                <td>System</td>
+                                <td>Expiry Alert</td>
+                                <td>3 units expiring in 7 days</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Inventory Summary</h3>
+                    <div class="grid grid-2">
+                        <div style="padding: 0.5rem 0;"><strong>A+:</strong> 35 units</div>
+                        <div style="padding: 0.5rem 0;"><strong>A-:</strong> <span style="color: var(--accent);">8 units (Low)</span></div>
+                        <div style="padding: 0.5rem 0;"><strong>B+:</strong> 28 units</div>
+                        <div style="padding: 0.5rem 0;"><strong>B-:</strong> 12 units</div>
+                        <div style="padding: 0.5rem 0;"><strong>AB+:</strong> 18 units</div>
+                        <div style="padding: 0.5rem 0;"><strong>AB-:</strong> 5 units</div>
+                        <div style="padding: 0.5rem 0;"><strong>O+:</strong> 42 units</div>
+                        <div style="padding: 0.5rem 0;"><strong>O-:</strong> <span style="color: var(--accent);">2 units (Critical)</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <div id="users" class="screen" style="display: none;">
+            <h2>User Management</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('users')">All Users</a>
+                <a href="#" onclick="showScreen('users-donors')">Donors</a>
+                <a href="#" onclick="showScreen('users-staff')">Staff</a>
+                <a href="#" onclick="showScreen('users-admins')">Admins</a>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <input type="text" placeholder="Search users..." style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; width: 300px;">
+                <select style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; margin-left: 1rem;">
+                    <option>All Roles</option>
+                    <option>DONOR</option>
+                    <option>STAFF</option>
+                    <option>ADMIN</option>
+                </select>
+                <button class="btn btn-purple" style="float: right;">+ Add User</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>U-1001</td>
+                        <td>John Smith</td>
+                        <td>john@email.com</td>
+                        <td><span class="badge badge-donor">DONOR</span></td>
+                        <td>Active</td>
+                        <td>2026-01-15</td>
+                        <td>
+                            <button class="btn">Edit</button>
+                            <button class="btn btn-warning">Disable</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>U-1002</td>
+                        <td>Dr. Sarah Johnson</td>
+                        <td>sarah@bloodbank.org</td>
+                        <td><span class="badge badge-staff">STAFF</span></td>
+                        <td>Active</td>
+                        <td>2025-08-20</td>
+                        <td>
+                            <button class="btn">Edit</button>
+                            <button class="btn btn-warning">Disable</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>U-1003</td>
+                        <td>Admin User</td>
+                        <td>admin@bloodbank.org</td>
+                        <td><span class="badge badge-admin">ADMIN</span></td>
+                        <td>Active</td>
+                        <td>2024-01-01</td>
+                        <td>
+                            <button class="btn">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Staff Management -->
+        <div id="staff" class="screen" style="display: none;">
+            <h2>Staff Management</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('staff')">All Staff</a>
+                <a href="#" onclick="showScreen('staff-register')">Register Staff</a>
+                <a href="#" onclick="showScreen('staff-training')">Training</a>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <button class="btn btn-purple">+ Register New Staff</button>
+                <button class="btn btn-success">Send PIN to Selected</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Staff ID</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Contact</th>
+                        <th>Training Status</th>
+                        <th>Certification</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>STF-001</td>
+                        <td>Dr. Sarah Johnson</td>
+                        <td>Phlebotomist</td>
+                        <td>555-0201</td>
+                        <td><span class="badge badge-eligible">Complete</span></td>
+                        <td>Valid until Dec 2026</td>
+                        <td>Active</td>
+                        <td>
+                            <button class="btn">View</button>
+                            <button class="btn btn-success">Send PIN</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>STF-002</td>
+                        <td>Mike Rodriguez</td>
+                        <td>Lab Technician</td>
+                        <td>555-0202</td>
+                        <td><span class="badge badge-pending">In Progress</span></td>
+                        <td>Valid until Mar 2026</td>
+                        <td>Active</td>
+                        <td>
+                            <button class="btn">View</button>
+                            <button class="btn btn-success">Send PIN</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>STF-003</td>
+                        <td>Emily Chen</td>
+                        <td>Nurse</td>
+                        <td>555-0203</td>
+                        <td><span class="badge badge-eligible">Complete</span></td>
+                        <td>Valid until Jun 2026</td>
+                        <td>Active</td>
+                        <td>
+                            <button class="btn">View</button>
+                            <button class="btn btn-success">Send PIN</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reports -->
+        <div id="reports" class="screen" style="display: none;">
+            <h2>Reports & Analytics</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('reports')">Overview</a>
+                <a href="#" onclick="showScreen('reports-donations')">Donations</a>
+                <a href="#" onclick="showScreen('reports-inventory')">Inventory</a>
+                <a href="#" onclick="showScreen('reports-quality')">Quality</a>
+            </div>
+            <div class="grid grid-3" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <h3>This Month's Donations</h3>
+                    <div class="value">156</div>
+                </div>
+                <div class="card">
+                    <h3>Avg Daily Donations</h3>
+                    <div class="value">5.2</div>
+                </div>
+                <div class="card">
+                    <h3>Blood Types Collected</h3>
+                    <div class="value">8/8</div>
+                </div>
+            </div>
+            <div class="grid grid-2" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <h3>Monthly Donation Trend</h3>
+                    <div style="padding: 1rem 0;">
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 60px;">Jan</div>
+                            <div style="flex: 1; background: var(--secondary); height: 24px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 70%; background: var(--primary); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">142</div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 60px;">Feb</div>
+                            <div style="flex: 1; background: var(--secondary); height: 24px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 65%; background: var(--primary); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">130</div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 60px;">Mar</div>
+                            <div style="flex: 1; background: var(--secondary); height: 24px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 80%; background: var(--primary); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">160</div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 60px;">Apr</div>
+                            <div style="flex: 1; background: var(--secondary); height: 24px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 85%; background: var(--primary); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">169</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 60px;">May</div>
+                            <div style="flex: 1; background: var(--secondary); height: 24px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 90%; background: var(--primary); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">180</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Blood Type Distribution</h3>
+                    <div style="padding: 1rem 0;">
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 40px;">O+</div>
+                            <div style="flex: 1; background: var(--secondary); height: 20px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 35%; background: var(--success); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">35%</div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 40px;">A+</div>
+                            <div style="flex: 1; background: var(--secondary); height: 20px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 30%; background: var(--success); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">30%</div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 40px;">B+</div>
+                            <div style="flex: 1; background: var(--secondary); height: 20px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 15%; background: var(--success); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">15%</div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="width: 40px;">O-</div>
+                            <div style="flex: 1; background: var(--secondary); height: 20px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 5%; background: var(--accent); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">5%</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 40px;">Other</div>
+                            <div style="flex: 1; background: var(--secondary); height: 20px; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 15%; background: var(--secondary); height: 100%;"></div>
+                            </div>
+                            <div style="margin-left: 1rem;">15%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>System Performance Metrics</h3>
+                <div class="grid grid-3">
+                    <div style="padding: 0.5rem 0;"><strong>Avg Processing Time:</strong> 12 min</div>
+                    <div style="padding: 0.5rem 0;"><strong>Response Rate:</strong> 98.5%</div>
+                    <div style="padding: 0.5rem 0;"><strong>System Uptime:</strong> 99.9%</div>
+                    <div style="padding: 0.5rem 0;"><strong>Active Users Today:</strong> 45</div>
+                    <div style="padding: 0.5rem 0;"><strong>API Calls (24h):</strong> 2,340</div>
+                    <div style="padding: 0.5rem 0;"><strong>Database Size:</strong> 4.2 GB</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings" class="screen" style="display: none;">
+            <h2>System Settings</h2>
+            <div class="screen-nav">
+                <a href="#" class="active" onclick="showScreen('settings')">General</a>
+                <a href="#" onclick="showScreen('settings-security')">Security</a>
+                <a href="#" onclick="showScreen('settings-notifications')">Notifications</a>
+                <a href="#" onclick="showScreen('settings-backup')">Backup</a>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>General Settings</h3>
+                    <div class="form-group">
+                        <label>Blood Bank Name</label>
+                        <input type="text" value="Central Blood Bank">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Email</label>
+                        <input type="email" value="contact@bloodbank.org">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Phone</label>
+                        <input type="tel" value="+1-555-0100">
+                    </div>
+                    <div class="form-group">
+                        <label>Operating Hours</label>
+                        <input type="text" value="08:00 - 18:00">
+                    </div>
+                    <button class="btn btn-success">Save Changes</button>
+                </div>
+                <div class="card">
+                    <h3>Inventory Settings</h3>
+                    <div class="form-group">
+                        <label>Low Stock Threshold (units)</label>
+                        <input type="number" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Critical Stock Threshold (units)</label>
+                        <input type="number" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Default Expiry Alert (days)</label>
+                        <input type="number" value="14">
+                    </div>
+                    <div class="form-group">
+                        <label>Blood Shelf Life (days)</label>
+                        <input type="number" value="42">
+                    </div>
+                    <button class="btn btn-success">Save Changes</button>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 2rem;">
+                <h3>Security Settings</h3>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label>Session Timeout (minutes)</label>
+                        <input type="number" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Login Attempts</label>
+                        <input type="number" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Password Min Length</label>
+                        <input type="number" value="8">
+                    </div>
+                    <div class="form-group">
+                        <label>PIN Expiry (days)</label>
+                        <input type="number" value="7">
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-right: 2rem;">
+                        <input type="checkbox" checked> Enforce Two-Factor Authentication for Admins
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" checked> Require PIN change on first login
+                    </label>
+                </div>
+                <button class="btn btn-success" style="margin-top: 1rem;">Save Security Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            const el = document.getElementById(screen);
+            if (el) el.style.display = 'block';
+        }
+        showScreen('login');
+    </script>
+</body>
+</html>
