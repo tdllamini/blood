@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank System - Clinical Donation Process Flowchart</title>
+    <style>
+        :root {
+            --primary: #2E86AB;
+            --secondary: #A8DADC;
+            --accent: #E63946;
+            --background: #F1FAEE;
+            --text: #1D3557;
+            --success: #2A9D8F;
+            --warning: #F4A261;
+            --step-bg: white;
+            --step-border: var(--primary);
+            --decision-bg: var(--warning);
+            --process-bg: var(--secondary);
+            --end-bg: var(--success);
+            --error-bg: var(--accent);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        .flowchart-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .step {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0.25rem;
+        }
+        .step-start {
+            background: var(--text);
+            color: white;
+            font-size: 1rem;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+        }
+        .step-process {
+            background: var(--process-bg);
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+        .step-donation {
+            background: #E8F5E9;
+            border: 2px solid var(--success);
+            color: #2E7D32;
+        }
+        .step-lab {
+            background: #E3F2FD;
+            border: 2px solid var(--primary);
+            color: #1565C0;
+        }
+        .step-storage {
+            background: #FFF3E0;
+            border: 2px solid var(--warning);
+            color: #E65100;
+        }
+        .step-end {
+            background: var(--end-bg);
+            color: white;
+            border-radius: 30px;
+            padding: 1rem 2rem;
+        }
+        .step-error {
+            background: var(--error-bg);
+            color: white;
+            border-radius: 30px;
+            padding: 1rem 2rem;
+        }
+        .decision {
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            background: var(--decision-bg);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            transform: rotate(0deg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 160px;
+            margin: 0.25rem;
+        }
+        .arrow {
+            text-align: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0.3rem 0;
+        }
+        .arrow-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .row {
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+        .branch {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin: 1rem 0;
+            gap: 1rem;
+        }
+        .branch-column {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 200px;
+        }
+        .branch-yes {
+            background: rgba(42, 157, 143, 0.1);
+            border: 2px solid var(--success);
+        }
+        .branch-no {
+            background: rgba(230, 57, 70, 0.1);
+            border: 2px solid var(--accent);
+        }
+        .branch-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .branch-yes .branch-title { color: var(--success); }
+        .branch-no .branch-title { color: var(--accent); }
+        .process-box {
+            display: inline-block;
+            padding: 0.6rem 1rem;
+            margin: 0.3rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .process-donation {
+            background: #E8F5E9;
+            border: 1px solid var(--success);
+            color: #2E7D32;
+        }
+        .process-testing {
+            background: #E3F2FD;
+            border: 1px solid var(--primary);
+            color: #1565C0;
+        }
+        .process-storage {
+            background: #FFF3E0;
+            border: 1px solid var(--warning);
+            color: #E65100;
+        }
+        .process-error {
+            background: #FFEBEE;
+            border: 1px solid var(--accent);
+            color: #C62828;
+        }
+        .step-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clinical Donation Process Flowchart</h1>
+    <p class="subtitle">End-to-end workflow from donor registration to blood inventory</p>
+
+    <div class="flowchart-container">
+        <!-- Start -->
+        <div class="row">
+            <div class="step step-start">🚩 Donor Arrives at Blood Bank</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="arrow-label">Step 1: Arrival & Registration</div>
+
+        <!-- Registration -->
+        <div class="row">
+            <div class="step step-process"><span class="step-number">1</span>Check-in at Reception</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">2</span>Verify Identity & Appointment</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <!-- Eligibility Screening -->
+        <div class="row">
+            <div class="step step-process"><span class="step-number">3</span>Eligibility Screening Form</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="arrow-label">Step 2: Pre-Donation Screening</div>
+
+        <!-- Medical History Check -->
+        <div class="row">
+            <div class="step step-process"><span class="step-number">4</span>Medical History Questionnaire</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="decision">Is donor eligible?</div>
+        </div>
+
+        <!-- Eligibility Branches -->
+        <div class="branch">
+            <div class="branch-column branch-yes">
+                <div class="branch-title">✅ YES — Eligible</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-donation">Continue to physical exam</div>
+            </div>
+            <div class="branch-column branch-no">
+                <div class="branch-title">❌ NO — Not Eligible</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-error">Record deferral reason</div>
+                <div class="arrow">↓</div>
+                <div class="step step-error">🚫 Defer Donor — End Process</div>
+            </div>
+        </div>
+
+        <!-- Physical Exam -->
+        <div class="row" style="margin-top: 1rem;">
+            <div class="step step-process"><span class="step-number">5</span>Physical Examination</div>
+        </div>
+        <div class="arrow-label">Hemoglobin, blood pressure, pulse, temperature check</div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="decision">Vitals within range?</div>
+        </div>
+
+        <div class="branch">
+            <div class="branch-column branch-yes">
+                <div class="branch-title">✅ YES — Pass</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-donation">Proceed to donation</div>
+            </div>
+            <div class="branch-column branch-no">
+                <div class="branch-title">❌ NO — Fail</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-error">Refer for medical review</div>
+                <div class="arrow">↓</div>
+                <div class="step step-error">🚫 Temporary Deferral — End Process</div>
+            </div>
+        </div>
+
+        <!-- Donation -->
+        <div class="row" style="margin-top: 1rem;">
+            <div class="step step-donation"><span class="step-number">6</span>🩸 Blood Collection</div>
+        </div>
+        <div class="arrow-label">Step 3: Donation Procedure</div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">7</span>Prep & Sterilize Arm</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">8</span>Collect Blood (450ml)</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">9</span>Apply Bandage & Post-Donation Care</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <!-- Post Donation Observation -->
+        <div class="row">
+            <div class="step step-process"><span class="step-number">10</span>15-Minute Observation</div>
+        </div>
+        <div class="arrow-label">Step 4: Post-Donation Observation</div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="decision">Donor feeling well?</div>
+        </div>
+
+        <div class="branch">
+            <div class="branch-column branch-yes">
+                <div class="branch-title">✅ YES</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-donation">Release donor with instructions</div>
+                <div class="arrow">↓</div>
+                <div class="step step-end">✅ Donor Discharged</div>
+            </div>
+            <div class="branch-column branch-no">
+                <div class="branch-title">❌ NO — Adverse Reaction</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-error">Provide medical assistance</div>
+                <div class="arrow">↓</div>
+                <div class="step step-error">🏥 Refer to Medical Staff</div>
+            </div>
+        </div>
+
+        <!-- Blood Processing -->
+        <div class="row" style="margin-top: 1.5rem;">
+            <div class="step step-lab"><span class="step-number">11</span>🔬 Blood Processing</div>
+        </div>
+        <div class="arrow-label">Step 5: Laboratory Testing (parallel to donor observation)</div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">12</span>Label & Segment Sample</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">13</span>Screen for Infectious Diseases</div>
+        </div>
+        <div class="arrow-label">HIV, Hepatitis B & C, Syphilis, Malaria</div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="step step-process"><span class="step-number">14</span>Blood Typing & Crossmatch</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="decision">All tests passed?</div>
+        </div>
+
+        <div class="branch">
+            <div class="branch-column branch-yes">
+                <div class="branch-title">✅ YES — Safe</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-storage">Mark as Usable</div>
+                <div class="arrow">↓</div>
+                <div class="step step-storage"><span class="step-number">15</span>📦 Store in Inventory</div>
+            </div>
+            <div class="branch-column branch-no">
+                <div class="branch-title">❌ NO — Unsafe</div>
+                <div class="arrow">↓</div>
+                <div class="process-box process-error">Mark as Unusable</div>
+                <div class="arrow">↓</div>
+                <div class="step step-error">🗑️ Dispose per Protocol</div>
+            </div>
+        </div>
+
+        <!-- Inventory Update -->
+        <div class="row" style="margin-top: 1.5rem;">
+            <div class="step step-storage"><span class="step-number">16</span>🔄 Inventory Updated</div>
+        </div>
+        <div class="arrow-label">System automatically updates blood unit count, expiry date tracking begins (42 days)</div>
+        <div class="arrow">↓</div>
+
+        <!-- Notifications -->
+        <div class="row">
+            <div class="step step-process"><span class="step-number">17</span>Send Notifications</div>
+        </div>
+        <div class="arrow-label">Thank you message to donor, low stock alerts to admin if needed</div>
+        <div class="arrow">↓</div>
+
+        <!-- End -->
+        <div class="row">
+            <div class="step step-end">🏁 Process Complete</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: var(--success);"></div>
+                <span>Donation Activity</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: var(--primary);"></div>
+                <span>Process Step</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: var(--warning);"></div>
+                <span>Decision Point</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: var(--accent);"></div>
+                <span>Error / Rejection</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: var(--text);"></div>
+                <span>Start / End</span>
+            </div>
+        </div>
+    </div>
+
+    <p style="text-align: center; margin-top: 2rem; color: #666; font-size: 0.9rem;">
+        Blood Bank Management System v1.0 | Clinical Donation Process Flowchart<br>
+        <em>Process time: ~45-60 minutes per donor | Blood shelf life: 42 days</em>
+    </p>
+</body>
+</html>

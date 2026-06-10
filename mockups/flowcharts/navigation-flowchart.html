@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank System - Main Navigation Flowchart</title>
+    <style>
+        :root {
+            --primary: #2E86AB;
+            --secondary: #A8DADC;
+            --accent: #E63946;
+            --background: #F1FAEE;
+            --text: #1D3557;
+            --success: #2A9D8F;
+            --warning: #F4A261;
+            --purple: #7209B7;
+            --donor: #2A9D8F;
+            --staff: #2E86AB;
+            --admin: #7209B7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        .flowchart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .node {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .node-start {
+            background: var(--text);
+            color: white;
+            font-size: 1.1rem;
+        }
+        .node-donor {
+            background: var(--donor);
+            color: white;
+        }
+        .node-staff {
+            background: var(--staff);
+            color: white;
+        }
+        .node-admin {
+            background: var(--admin);
+            color: white;
+        }
+        .node-action {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .node-donor-action {
+            background: white;
+            border: 2px solid var(--donor);
+            color: var(--donor);
+        }
+        .node-staff-action {
+            background: white;
+            border: 2px solid var(--staff);
+            color: var(--staff);
+        }
+        .node-admin-action {
+            background: white;
+            border: 2px solid var(--admin);
+            color: var(--admin);
+        }
+        .node-data {
+            background: var(--secondary);
+            color: var(--text);
+        }
+        .arrow {
+            text-align: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
+        .arrow-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+        }
+        .row {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .role-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+        .role-donor {
+            border-left-color: var(--donor);
+            background: rgba(42, 157, 143, 0.05);
+        }
+        .role-staff {
+            border-left-color: var(--staff);
+            background: rgba(46, 134, 171, 0.05);
+        }
+        .role-admin {
+            border-left-color: var(--admin);
+            background: rgba(114, 9, 183, 0.05);
+        }
+        .role-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .role-donor .role-title { color: var(--donor); }
+        .role-staff .role-title { color: var(--staff); }
+        .role-admin .role-title { color: var(--admin); }
+        .role-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .role-donor .role-badge { background: var(--donor); color: white; }
+        .role-staff .role-badge { background: var(--staff); color: white; }
+        .role-admin .role-badge { background: var(--admin); color: white; }
+        .sub-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .sub-flow-item {
+            text-align: center;
+        }
+        .connector-h {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .connector-line {
+            flex: 1;
+            height: 2px;
+            background: var(--primary);
+            max-width: 100px;
+        }
+        .login-gate {
+            background: var(--warning);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blood Bank Management System</h1>
+    <p class="subtitle">Main System Navigation Flowchart</p>
+
+    <div class="flowchart-container">
+        <!-- Entry Point -->
+        <div class="row">
+            <div class="node node-start">🔐 System Entry</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="arrow-label">User authenticates with credentials</div>
+
+        <!-- Role Selection -->
+        <div class="row">
+            <div class="node node-data">Role-Based Access Control</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <div class="row">
+            <div class="node node-donor">👤 Donor</div>
+            <div style="display: inline-block; width: 2rem;"></div>
+            <div class="node node-staff">👨‍⚕️ Staff</div>
+            <div style="display: inline-block; width: 2rem;"></div>
+            <div class="node node-admin">⚙️ Admin</div>
+        </div>
+        <div class="arrow">↓</div>
+
+        <!-- DONOR SECTION -->
+        <div class="role-section role-donor">
+            <div class="role-title">
+                <span>🩸 Donor Portal</span>
+                <span class="role-badge">DONOR</span>
+            </div>
+
+            <div class="row">
+                <div class="node node-donor-action">📋 Dashboard</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-donor-action">📅 Book Appointment</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-donor-action">📜 Donation History</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="arrow-label">Donor views eligibility status, total donations, and upcoming appointments</div>
+
+            <div class="row">
+                <div class="node node-donor-action">👤 Edit Profile</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-donor-action">🩺 Medical History</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="arrow-label">Donor updates personal info and medical screening results</div>
+
+            <div class="sub-flow">
+                <div class="sub-flow-item">
+                    <div class="node node-donor-action">🔍 Search Donors</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Staff-only</p>
+                </div>
+                <div class="sub-flow-item">
+                    <div class="node node-donor-action">📊 View Reports</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Staff-only</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow" style="margin: 2rem 0;">↓</div>
+
+        <!-- STAFF SECTION -->
+        <div class="role-section role-staff">
+            <div class="role-title">
+                <span>🏥 Staff Portal</span>
+                <span class="role-badge">STAFF</span>
+            </div>
+
+            <div class="row">
+                <div class="node node-staff-action">📊 Dashboard</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-staff-action">📅 Appointments</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-staff-action">🩸 Inventory</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="arrow-label">Staff manages daily operations: appointments, inventory, and tasks</div>
+
+            <div class="row">
+                <div class="node node-staff-action">👥 Donor Management</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-staff-action">📦 Blood Requests</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-staff-action">🧪 Testing & QC</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="arrow-label">Staff processes donations, manages requests, and performs quality checks</div>
+
+            <div class="sub-flow">
+                <div class="sub-flow-item">
+                    <div class="node node-staff-action">🔔 Notifications</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Alerts & reminders</p>
+                </div>
+                <div class="sub-flow-item">
+                    <div class="node node-staff-action">🖨️ Generate Labels</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Blood bag labels</p>
+                </div>
+                <div class="sub-flow-item">
+                    <div class="node node-staff-action">📋 Record Donation</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Entry & processing</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow" style="margin: 2rem 0;">↓</div>
+
+        <!-- ADMIN SECTION -->
+        <div class="role-section role-admin">
+            <div class="role-title">
+                <span>⚙️ Admin Portal</span>
+                <span class="role-badge">ADMIN</span>
+            </div>
+
+            <div class="row">
+                <div class="node node-admin-action">📊 Dashboard</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-admin-action">👥 User Management</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-admin-action">👨‍⚕️ Staff Management</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="arrow-label">Admin oversees users, staff registration, and system configuration</div>
+
+            <div class="row">
+                <div class="node node-admin-action">📈 Reports & Analytics</div>
+                <div style="display: inline-block; width: 2rem;"></div>
+                <div class="node node-admin-action">🔧 System Settings</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="arrow-label">Admin reviews reports, manages inventory thresholds, and configures system</div>
+
+            <div class="sub-flow">
+                <div class="sub-flow-item">
+                    <div class="node node-admin-action">➕ Register Staff</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">With PIN delivery</p>
+                </div>
+                <div class="sub-flow-item">
+                    <div class="node node-admin-action">🔐 Role Management</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">RBAC controls</p>
+                </div>
+                <div class="sub-flow-item">
+                    <div class="node node-admin-action">🔄 Quality Control</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Demand & optimization</p>
+                </div>
+                <div class="sub-flow-item">
+                    <div class="node node-admin-action">💾 Backup & Restore</div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Data management</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow" style="margin: 2rem 0;">↓</div>
+
+        <!-- Shared Data Layer -->
+        <div class="row">
+            <div class="node node-data">🗄️ Shared Data Layer</div>
+        </div>
+        <div class="arrow" style="font-size: 1rem;">↓ All roles access centralized database</div>
+
+        <div class="row">
+            <div class="node node-data">👤 Donors</div>
+            <div style="display: inline-block; width: 1rem;"></div>
+            <div class="node node-data">🩸 Blood Inventory</div>
+            <div style="display: inline-block; width: 1rem;"></div>
+            <div class="node node-data">📅 Appointments</div>
+            <div style="display: inline-block; width: 1rem;"></div>
+            <div class="node node-data">🧪 Test Results</div>
+            <div style="display: inline-block; width: 1rem;"></div>
+            <div class="node node-data">📦 Requests</div>
+        </div>
+    </div>
+
+    <p style="text-align: center; margin-top: 2rem; color: #666; font-size: 0.9rem;">
+        Blood Bank Management System v1.0 | Role-Based Navigation
+    </p>
+</body>
+</html>
